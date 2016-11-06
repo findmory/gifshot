@@ -79,6 +79,9 @@ define([
         if (utils.isString(existingVideo)) {
           videoElement.src = existingVideo;
           videoElement.innerHTML = '<source src="' + existingVideo + '" type="video/' + utils.getExtension(existingVideo) + '" />';
+        } else if (existingVideo instanceof Blob) {
+            videoElement.src = utils.URL.createObjectURL(existingVideo);
+            videoElement.innerHTML = '<source src="' + existingVideo + '" type="' + existingVideo.type + '" />';
         }
       } else if (videoElement.mozSrcObject) {
         videoElement.mozSrcObject = cameraStream;
