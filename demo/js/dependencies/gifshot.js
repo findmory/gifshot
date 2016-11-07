@@ -1110,15 +1110,17 @@ AnimatedGIF = function (utils, frameWorkerCode, NeuQuant, GifWriter) {
       }
     },
     'generateGIF': function (frames, callback) {
-      var buffer = [], gifOptions = { 'loop': this.repeat }, options = this.options, interval = options.interval, existingImages = options.images, hasExistingImages = !!existingImages.length, height = options.gifHeight, width = options.gifWidth, gifWriter = new GifWriter(buffer, width, height, gifOptions), onRenderProgressCallback = this.onRenderProgressCallback, delay = hasExistingImages ? interval * 100 : 0, bufferToString, gif;
+      var buffer = [], gifOptions = { 'loop': this.repeat }, options = this.options, interval = options.interval, existingImages = options.images, hasExistingImages = !!existingImages.length, height = options.gifHeight, width = options.gifWidth, gifWriter = new GifWriter(buffer, width, height, gifOptions), onRenderProgressCallback = this.onRenderProgressCallback, delay = hasExistingImages ? interval * 100 : 0, frameDur = options.frameDur ? options.frameDur : 1, bufferToString, gif;
       this.generatingGIF = true;
       utils.each(frames, function (iterator, frame) {
         var framePalette = frame.palette;
         onRenderProgressCallback(0.75 + 0.25 * frame.position * 1 / frames.length);
-        gifWriter.addFrame(0, 0, width, height, frame.pixels, {
-          palette: framePalette,
-          delay: delay
-        });
+        for (var i = 0; i < frameDur; i++) {
+          gifWriter.addFrame(0, 0, width, height, frame.pixels, {
+            palette: framePalette,
+            delay: delay
+          });
+        }
       });
       gifWriter.end();
       onRenderProgressCallback(1);

@@ -210,6 +210,7 @@ define([
         gifWriter = new GifWriter(buffer, width, height, gifOptions),
         onRenderProgressCallback = this.onRenderProgressCallback,
         delay = hasExistingImages ? interval * 100 : 0,
+        frameDur = options.frameDur ? options.frameDur : 1,
         bufferToString,
         gif;
 
@@ -220,10 +221,12 @@ define([
 
         onRenderProgressCallback(0.75 + 0.25 * frame.position * 1.0 / frames.length);
 
-        gifWriter.addFrame(0, 0, width, height, frame.pixels, {
-          palette: framePalette,
-          delay: delay
-        });
+        for (var i = 0; i < frameDur; i ++) {
+          gifWriter.addFrame(0, 0, width, height, frame.pixels, {
+            palette: framePalette,
+            delay: delay
+          });
+        }
       });
 
       gifWriter.end();

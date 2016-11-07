@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Gifshot Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <script src="js/dependencies/gifshot.js"></script>
+    </head>
+    <body>
+      <script>
+
+      var fetchImage = function(img) {
+        fetch(img).then(function (response) {
+          console.log('fetch image response: ', response);
+          return response.blob();
+        }).then(function (blob) {
+            makeGIF(blob);
+        });
+      };
+
+      var makeGIF = function(file) {
+        gifshot.createGIF({
+          'video': [file],
+          'interval': 1,  // this means grab a frame every n seconds
+          'numFrames': 20,  // this is how many seconds the finished video will be
+          'frameDur': 5, // this is how long to hold each frame for (10 == 1 second)
+          'sampleInterval': 10,
+          'gifWidth': 540,
+          'gifHeight': 360
+        }, function(obj) {
+          if(!obj.error) {
+            var image = obj.image,
+            animatedImage = document.createElement('img');
+            animatedImage.src = image;
+            document.body.appendChild(animatedImage);
+            console.log(obj);
+          }
+        });
+      };
+
+      // assume this is the response from some remote API
+      //fetchImage("../example.mp4");
+      makeGIF("../example.mp4");
+
+
+      </script>
+    </body>
+  </html>
